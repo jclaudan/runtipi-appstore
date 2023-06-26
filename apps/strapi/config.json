@@ -1,0 +1,63 @@
+{
+  "$schema": "../schema.json",
+  "name": "Strapi",
+  "port": 1337,
+  "available": true,
+  "exposable": true,
+  "id": "strapi",
+  "tipi_version": 1,
+  "version": "4.0.0",
+  "categories": ["data"],
+  "description": "Open source Node.js Headless CMS to easily build customisable APIs",
+  "short_desc": "Open source Node.js Headless CMS",
+  "author": "Strapi",
+  "source": "https://github.com/strapi/strapi",
+  "form_fields": [
+    {
+      "type": "text",
+      "label": "App Url",
+      "required": true,
+      "env_variable": "APP_URL"
+    },
+    {
+      "type": "text",
+      "label": "Host api",
+      "required": true,
+      "env_variable": "HOST"
+    },
+    {
+      "type": "text",
+      "label": "Database Host",
+      "required": true,
+      "env_variable": "DATABASE_HOST"
+    },
+    {
+      "type": "text",
+      "label": "Database Name",
+      "required": true,
+      "env_variable": "DATABASE_NAME"
+    },
+    {
+      "type": "text",
+      "label": "Database Username",
+      "required": true,
+      "env_variable": "DATABASE_USERNAME"
+    },
+    {
+      "type": "text",
+      "label": "Database Password",
+      "required": true,
+      "env_variable": "DATABASE_PASSWORD"
+    },
+    {
+      "type": "select",
+      "label": "Database SSL",
+      "options": [
+        { "label": "True", "value": "true" },
+        { "label": "False", "value": "false" }
+      ],
+      "required": true,
+      "env_variable": "DATABASE_SSL"
+    }
+  ]
+}

@@ -1,0 +1,75 @@
+version: '3.8'
+services:
+  strapi:
+    image: naskio/strapi
+    restart: always
+    container_name: strapi
+    ports:
+      - ${APP_PORT}:1337
+    environment:
+      # APP_KEYS:	"strapi"
+      # API_TOKEN_SALT:	"strapi"
+      # ADMIN_JWT_SECRET:	"strapi"
+      # JWT_SECRET:	"strapi"
+      # TRANSFER_TOKEN_SALT: 'strapi'
+      APP_URL: ${APP_URL}
+      HOST: ${HOST}
+      NODE_ENV: development
+      DATABASE_CLIENT: postgres
+      DATABASE_HOST: ${DATABASE_HOST}
+      DATABASE_PORT: 5432
+      DATABASE_NAME: ${DATABASE_NAME}
+      DATABASE_USERNAME: ${DATABASE_USERNAME}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+      DATABASE_SSL: ${DATABASE_SSL} # boolean for SSL.
+    volumes:
+      - app:/srv/app # create a new project in app volume
+    networks:
+      - tipi_main_network
+    labels:
+      # Main
+      traefik.enable: true
+      traefik.http.middlewares.strapi-web-redirect.redirectscheme.scheme: https
+      traefik.http.services.strapi.loadbalancer.server.port: 1337
+      # Web
+      traefik.http.routers.strapi-insecure.rule: Host(`${APP_DOMAIN}`)
+      traefik.http.routers.strapi-insecure.entrypoints: web
+      traefik.http.routers.strapi-insecure.service: strapi
+      traefik.http.routers.strapi-insecure.middlewares: strapi-web-redirect
+      # Websecure
+      traefik.http.routers.strapi.rule: Host(`${APP_DOMAIN}`)
+      traefik.http.routers.strapi.entrypoints: websecure
+      traefik.http.routers.strapi.service: strapi
+      traefik.http.routers.strapi.tls.certresolver: myresolver
+      # Local domain
+      traefik.http.routers.strapi-local-insecure.rule: Host(`strapi.${LOCAL_DOMAIN}`)
+      traefik.http.routers.strapi-local-insecure.entrypoints: web
+      traefik.http.routers.strapi-local-insecure.service: strapi
+      traefik.http.routers.strapi-local-insecure.middlewares: strapi-web-redirect
+      # Local domain secure
+      traefik.http.routers.strapi-local.rule: Host(`strapi.${LOCAL_DOMAIN}`)
+      traefik.http.routers.strapi-local.entrypoints: websecure
+      traefik.http.routers.strapi-local.service: strapi
+      traefik.http.routers.strapi-local.tls: true
+
+  postgres:
+    restart: always
+    image: postgres
+    container_name: postgres
+    environment:
+      POSTGRES_DB: ${DATABASE_NAME}
+      POSTGRES_USER: ${DATABASE_USERNAME}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+    expose:
+      - 5432
+    volumes:
+      - data:/var/lib/postgresql/data
+    networks:
+      - tipi_main_network
+
+networks:
+  tipi_main_network:
+
+volumes:
+  data:
+  app:
