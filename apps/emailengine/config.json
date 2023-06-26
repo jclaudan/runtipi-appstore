@@ -1,0 +1,53 @@
+{
+  "$schema": "../schema.json",
+  "name": "EmailEngine",
+  "port": 3000,
+  "available": true,
+  "exposable": true,
+  "id": "emailengine",
+  "tipi_version": 1,
+  "version": "latest",
+  "categories": ["data"],
+  "description": "EmailEngine service",
+  "short_desc": "EmailEngine service",
+  "author": "Postalsys",
+  "source": "https://github.com/postalsys/emailengine",
+  "form_fields": [
+    {
+      "type": "text",
+      "label": "SMTP Server Port",
+      "required": true,
+      "env_variable": "SMTP_SERVER_PORT"
+    },
+    {
+      "type": "text",
+      "label": "SMTP Server Password",
+      "required": true,
+      "env_variable": "SMTP_SERVER_PASSWORD"
+    },
+    {
+      "type": "text",
+      "label": "Encryption secret",
+      "required": true,
+      "env_variable": "EENGINE_SECRET"
+    },
+    {
+      "type": "text",
+      "label": "Database connection URL",
+      "required": true,
+      "env_variable": "EENGINE_REDIS"
+    },
+    {
+      "type": "text",
+      "label": "Application Domain",
+      "required": true,
+      "env_variable": "APP_DOMAIN"
+    },
+    {
+      "type": "text",
+      "label": "Local Domain",
+      "required": true,
+      "env_variable": "LOCAL_DOMAIN"
+    }
+  ]
+}

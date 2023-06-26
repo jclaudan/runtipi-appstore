@@ -1,0 +1,57 @@
+version: '3.8'
+services:
+  emailengine:
+    restart: always
+    image: postalsys/emailengine:latest
+    ports:
+      - 3000:3000
+      - ${SMTP_SERVER_PORT}:${SMTP_SERVER_PORT}
+    depends_on:
+      - redis
+    environment:
+      EENGINE_SETTINGS: >
+        {
+          "smtpServerEnabled": true,
+          "smtpServerPort": ${SMTP_SERVER_PORT},
+          "smtpServerHost": "0.0.0.0",
+          "smtpServerAuthEnabled": true,
+          "smtpServerPassword": "${SMTP_SERVER_PASSWORD}"
+        }
+      EENGINE_SECRET: '${EENGINE_SECRET}'
+      EENGINE_REDIS: '${REDIS_URL}'
+    networks:
+      - tipi_main_network
+    labels:
+      traefik.enable: true
+      traefik.http.middlewares.emailengine-web-redirect.redirectscheme.scheme: https
+      traefik.http.services.emailengine.loadbalancer.server.port: 3000
+      traefik.http.routers.emailengine-insecure.rule: Host(`${APP_DOMAIN}`)
+      traefik.http.routers.emailengine-insecure.entrypoints: web
+      traefik.http.routers.emailengine-insecure.service: emailengine
+      traefik.http.routers.emailengine-insecure.middlewares: emailengine-web-redirect
+      traefik.http.routers.emailengine.rule: Host(`${APP_DOMAIN}`)
+      traefik.http.routers.emailengine.entrypoints: websecure
+      traefik.http.routers.emailengine.service: emailengine
+      traefik.http.routers.emailengine.tls.certresolver: myresolver
+      traefik.http.routers.emailengine-local-insecure.rule: Host(`emailengine.${LOCAL_DOMAIN}`)
+      traefik.http.routers.emailengine-local-insecure.entrypoints: web
+      traefik.http.routers.emailengine-local-insecure.service: emailengine
+      traefik.http.routers.emailengine-local-insecure.middlewares: emailengine-web-redirect
+      traefik.http.routers.emailengine-local.rule: Host(`emailengine.${LOCAL_DOMAIN}`)
+      traefik.http.routers.emailengine-local.entrypoints: websecure
+      traefik.http.routers.emailengine-local.service: emailengine
+      traefik.http.routers.emailengine-local.tls: true
+
+  redis:
+    image: redis:alpine
+    restart: always
+    volumes:
+      - data:/data
+    networks:
+      - tipi_main_network
+        
+networks:
+  tipi_main_network:
+
+volumes:
+  data:
