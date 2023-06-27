@@ -1,0 +1,12 @@
+version: "3.8"
+services:
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    command: tunnel --no-autoupdate run --token ${SECRET_TOKEN}
+    environment:
+      - SECRET_TOKEN=${SECRET_TOKEN}
+    networks:
+      - tipi_main_network
+        
+networks:
+  tipi_main_network:

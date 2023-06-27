@@ -1,0 +1,23 @@
+{
+  "$schema": "../schema.json",
+  "name": "CloudFlareTunnel",
+  "port": 3000,
+  "available": true,
+  "exposable": true,
+  "id": "cloudflaretunnel",
+  "tipi_version": 1,
+  "version": "latest",
+  "categories": ["data"],
+  "description": "CloudFlareTunnel service",
+  "short_desc": "CloudFlareTunnel service",
+  "author": "CloudFlare",
+  "source": "https://github.com/cloudflare",
+  "form_fields": [
+    {
+      "type": "text",
+      "label": "SECRET TOKEN",
+      "required": true,
+      "env_variable": "SECRET_TOKEN"
+    }
+  ]
+}
