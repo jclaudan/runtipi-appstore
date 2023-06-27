@@ -24,6 +24,12 @@
       "label": "LOCAL_DOMAIN",
       "required": true,
       "env_variable": "LOCAL_DOMAIN"
+    },
+    {
+      "type": "text",
+      "label": "APP_PORT",
+      "required": true,
+      "env_variable": "APP_PORT"
     }
   ]
 }
