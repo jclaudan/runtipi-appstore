@@ -1,67 +1,33 @@
 {
   "$schema": "../schema.json",
   "name": "Postal",
-  "port": 5000,
+  "port": 80,
   "available": true,
   "exposable": true,
   "id": "postal",
   "tipi_version": 1,
   "version": "1.0.0",
   "categories": ["data"],
-  "description": "Postal is a complete and fully featured mail server for use by websites & web servers.",
-  "short_desc": "Complete and fully featured mail server",
+  "description": "A fully featured open source mail delivery platform for incoming & outgoing e-mail",
+  "short_desc": "Your self-hosted email service",
   "author": "Postal",
   "source": "https://github.com/postalserver/postal",
   "form_fields": [
     {
       "type": "text",
-      "label": "Postal Configuration Root",
+      "label": "APP_DOMAIN",
+      "hint": "Your App Domain",
+      "placeholder": "myapp.example.com",
       "required": true,
-      "env_variable": "POSTAL_CONFIG_ROOT"
+      "env_variable": "APP_DOMAIN"
     },
     {
       "type": "text",
-      "label": "Katapult Configuration File",
+      "label": "LOCAL_DOMAIN",
+      "hint": "Your Local Domain",
+      "placeholder": "local.example.com",
       "required": true,
-      "env_variable": "KATAPULT_CONFIG_FILE"
-    },
-    {
-      "type": "text",
-      "label": "Wait for Timeout",
-      "required": true,
-      "env_variable": "WAIT_FOR_TIMEOUT"
-    },
-    {
-      "type": "text",
-      "label": "Wait for Targets",
-      "required": true,
-      "env_variable": "WAIT_FOR_TARGETS"
-    },
-    {
-      "type": "text",
-      "label": "MariaDB Database",
-      "required": true,
-      "env_variable": "MARIADB_DATABASE"
-    },
-    {
-      "type": "select",
-      "label": "Allow Empty MariaDB Password",
-      "options": [
-        { "label": "Yes", "value": "yes" },
-        { "label": "No", "value": "no" }
-      ],
-      "required": true,
-      "env_variable": "MARIADB_ALLOW_EMPTY_PASSWORD"
-    },
-    {
-      "type": "select",
-      "label": "Allow Empty MariaDB Root Password",
-      "options": [
-        { "label": "Yes", "value": "yes" },
-        { "label": "No", "value": "no" }
-      ],
-      "required": true,
-      "env_variable": "MARIADB_ALLOW_EMPTY_ROOT_PASSWORD"
+      "env_variable": "LOCAL_DOMAIN"
     }
   ]
 }
