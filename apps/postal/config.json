@@ -30,6 +30,32 @@
       "label": "APP_PORT",
       "required": true,
       "env_variable": "APP_PORT"
+    },
+    {
+      "type": "text",
+      "label": "MARIADB_DATABASE",
+      "required": true,
+      "env_variable": "MARIADB_DATABASE"
+    },
+    {
+      "type": "select",
+      "label": "MARIADB_ALLOW_EMPTY_PASSWORD",
+      "options": [
+        { "label": "yes", "value": "yes" },
+        { "label": "no", "value": "no" }
+      ],
+      "required": true,
+      "env_variable": "MARIADB_ALLOW_EMPTY_PASSWORD"
+    },
+    {
+      "type": "select",
+      "label": "MARIADB_ALLOW_EMPTY_ROOT_PASSWORD",
+      "options": [
+        { "label": "yes", "value": "yes" },
+        { "label": "no", "value": "no" }
+      ],
+      "required": true,
+      "env_variable": "MARIADB_ALLOW_EMPTY_ROOT_PASSWORD"
     }
   ]
 }
