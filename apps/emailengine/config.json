@@ -15,37 +15,37 @@
   "form_fields": [
     {
       "type": "text",
-      "label": "SMTP Server Port",
+      "label": "SMTP_SERVER_PORT",
       "required": true,
       "env_variable": "SMTP_SERVER_PORT"
     },
     {
       "type": "text",
-      "label": "SMTP Server Password",
+      "label": "SMTP_SERVER_PASSWORD",
       "required": true,
       "env_variable": "SMTP_SERVER_PASSWORD"
     },
     {
       "type": "text",
-      "label": "Encryption secret",
+      "label": "EENGINE_SECRET",
       "required": true,
       "env_variable": "EENGINE_SECRET"
     },
     {
       "type": "text",
-      "label": "Database connection URL",
+      "label": "REDIS_PORT",
       "required": true,
-      "env_variable": "EENGINE_REDIS"
+      "env_variable": "REDIS_PORT"
     },
     {
       "type": "text",
-      "label": "Application Domain",
+      "label": "APP_DOMAIN",
       "required": true,
       "env_variable": "APP_DOMAIN"
     },
     {
       "type": "text",
-      "label": "Local Domain",
+      "label": "LOCAL_DOMAIN",
       "required": true,
       "env_variable": "LOCAL_DOMAIN"
     }
