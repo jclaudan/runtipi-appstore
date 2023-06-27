@@ -18,7 +18,7 @@ services:
           "smtpServerPassword": "${SMTP_SERVER_PASSWORD}"
         }
       EENGINE_SECRET: '${EENGINE_SECRET}'
-      EENGINE_REDIS: '${REDIS_URL}'
+      EENGINE_REDIS: 'redis://redis:${REDIS_PORT}/2'
     networks:
       - tipi_main_network
     labels:
@@ -47,6 +47,8 @@ services:
     restart: always
     volumes:
       - data:/data
+    ports:
+      - ${REDIS_PORT}:${REDIS_PORT}
     networks:
       - tipi_main_network
         
