@@ -1,59 +1,57 @@
-version: '3.8'
+version: "3.8"
 services:
-  emailengine:
-    restart: always
-    image: postalsys/emailengine:latest
-    ports:
-      - 3000:3000
-      - ${SMTP_SERVER_PORT}:${SMTP_SERVER_PORT}
+  postal:
+    image: catdeployed/postal:alpine
     depends_on:
-      - redis
+      - mariadb
+      - rabbitmq
+    entrypoint: ["/docker-entrypoint.sh"]
+    volumes:
+      - type: bind
+        source: ./docker/ci-config
+        target: /config
     environment:
-      EENGINE_SETTINGS: >
-        {
-          "smtpServerEnabled": true,
-          "smtpServerPort": ${SMTP_SERVER_PORT},
-          "smtpServerHost": "0.0.0.0",
-          "smtpServerAuthEnabled": true,
-          "smtpServerPassword": "${SMTP_SERVER_PASSWORD}"
-        }
-      EENGINE_SECRET: '${EENGINE_SECRET}'
-      EENGINE_REDIS: 'redis://redis:${REDIS_PORT}/2'
-    networks:
-      - tipi_main_network
+      POSTAL_CONFIG_ROOT: /config
+      KATAPULT_CONFIG_FILE: /ci-config.yml
+      WAIT_FOR_TIMEOUT: 90
+      WAIT_FOR_TARGETS: |-
+        mariadb:3306
+        rabbitmq:5672
     labels:
       traefik.enable: true
-      traefik.http.middlewares.emailengine-web-redirect.redirectscheme.scheme: https
-      traefik.http.services.emailengine.loadbalancer.server.port: 3000
-      traefik.http.routers.emailengine-insecure.rule: Host(`${APP_DOMAIN}`)
-      traefik.http.routers.emailengine-insecure.entrypoints: web
-      traefik.http.routers.emailengine-insecure.service: emailengine
-      traefik.http.routers.emailengine-insecure.middlewares: emailengine-web-redirect
-      traefik.http.routers.emailengine.rule: Host(`${APP_DOMAIN}`)
-      traefik.http.routers.emailengine.entrypoints: websecure
-      traefik.http.routers.emailengine.service: emailengine
-      traefik.http.routers.emailengine.tls.certresolver: myresolver
-      traefik.http.routers.emailengine-local-insecure.rule: Host(`emailengine.${LOCAL_DOMAIN}`)
-      traefik.http.routers.emailengine-local-insecure.entrypoints: web
-      traefik.http.routers.emailengine-local-insecure.service: emailengine
-      traefik.http.routers.emailengine-local-insecure.middlewares: emailengine-web-redirect
-      traefik.http.routers.emailengine-local.rule: Host(`emailengine.${LOCAL_DOMAIN}`)
-      traefik.http.routers.emailengine-local.entrypoints: websecure
-      traefik.http.routers.emailengine-local.service: emailengine
-      traefik.http.routers.emailengine-local.tls: true
-
-  redis:
-    image: redis:alpine
-    restart: always
-    volumes:
-      - data:/data
-    ports:
-      - ${REDIS_PORT}:${REDIS_PORT}
+      traefik.http.middlewares.postal-web-redirect.redirectscheme.scheme: https
+      traefik.http.services.postal.loadbalancer.server.port: 80
+      traefik.http.routers.postal-insecure.rule: Host(`${APP_DOMAIN}`)
+      traefik.http.routers.postal-insecure.entrypoints: web
+      traefik.http.routers.postal-insecure.service: postal
+      traefik.http.routers.postal-insecure.middlewares: postal-web-redirect
+      traefik.http.routers.postal.rule: Host(`${APP_DOMAIN}`)
+      traefik.http.routers.postal.entrypoints: websecure
+      traefik.http.routers.postal.service: postal
+      traefik.http.routers.postal.tls.certresolver: myresolver
+      traefik.http.routers.postal-local-insecure.rule: Host(`postal.${LOCAL_DOMAIN}`)
+      traefik.http.routers.postal-local-insecure.entrypoints: web
+      traefik.http.routers.postal-local-insecure.service: postal
+      traefik.http.routers.postal-local-insecure.middlewares: postal-web-redirect
+      traefik.http.routers.postal-local.rule: Host(`postal.${LOCAL_DOMAIN}`)
+      traefik.http.routers.postal-local.entrypoints: websecure
+      traefik.http.routers.postal-local.service: postal
+      traefik.http.routers.postal-local.tls: true
     networks:
       - tipi_main_network
-        
-networks:
-  tipi_main_network:
 
-volumes:
-  data:
+  mariadb:
+    image: mariadb
+    restart: always
+    environment:
+      MARIADB_DATABASE: postal
+      MARIADB_ALLOW_EMPTY_PASSWORD: 'yes'
+      MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: 'yes'
+    networks:
+      - tipi_main_network
+
+  rabbitmq:
+    image: rabbitmq:3
+    restart: always
+    networks:
+      - tipi_main_network
