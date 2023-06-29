@@ -1,61 +1,287 @@
 {
   "$schema": "../schema.json",
   "name": "Postal",
-  "port": 5465,
+  "port": 25,
   "available": true,
   "exposable": true,
-  "id": "postal",
+  "id": "postal-app",
   "tipi_version": 1,
-  "version": "1.0.0",
-  "categories": ["data"],
-  "description": "A fully featured open source mail delivery platform for incoming & outgoing e-mail",
-  "short_desc": "Your self-hosted email service",
-  "author": "Postal",
-  "source": "https://github.com/postalserver/postal",
+  "version": "latest",
+  "categories": ["mail"],
+  "description": "Open source mail delivery platform, Postal.",
+  "short_desc": "Open source mail delivery platform",
+  "author": "Tiredofit",
+  "source": "https://github.com/postalhq/postal",
   "form_fields": [
     {
       "type": "text",
-      "label": "APP_DOMAIN",
+      "label": "Container Name",
       "required": true,
-      "env_variable": "APP_DOMAIN"
+      "env_variable": "CONTAINER_NAME"
     },
     {
       "type": "text",
-      "label": "LOCAL_DOMAIN",
+      "label": "Database Host",
       "required": true,
-      "env_variable": "LOCAL_DOMAIN"
+      "env_variable": "DB_HOST"
     },
     {
       "type": "text",
-      "label": "APP_PORT",
+      "label": "Database Port",
       "required": true,
-      "env_variable": "APP_PORT"
+      "env_variable": "DB_PORT"
     },
     {
       "type": "text",
-      "label": "MARIADB_DATABASE",
+      "label": "Database Name",
       "required": true,
-      "env_variable": "MARIADB_DATABASE"
+      "env_variable": "DB_NAME"
     },
     {
-      "type": "select",
-      "label": "MARIADB_ALLOW_EMPTY_PASSWORD",
-      "options": [
-        { "label": "yes", "value": "yes" },
-        { "label": "no", "value": "no" }
-      ],
+      "type": "text",
+      "label": "Database Username",
       "required": true,
-      "env_variable": "MARIADB_ALLOW_EMPTY_PASSWORD"
+      "env_variable": "DB_USER"
     },
     {
-      "type": "select",
-      "label": "MARIADB_ALLOW_EMPTY_ROOT_PASSWORD",
-      "options": [
-        { "label": "yes", "value": "yes" },
-        { "label": "no", "value": "no" }
-      ],
+      "type": "text",
+      "label": "Database Password",
       "required": true,
-      "env_variable": "MARIADB_ALLOW_EMPTY_ROOT_PASSWORD"
+      "env_variable": "DB_PASS"
+    },
+    {
+      "type": "text",
+      "label": "Database Root Password",
+      "required": true,
+      "env_variable": "DB_ROOT_PASS"
+    },
+    {
+      "type": "text",
+      "label": "Admin Email",
+      "required": true,
+      "env_variable": "ADMIN_EMAIL"
+    },
+    {
+      "type": "text",
+      "label": "Admin Password",
+      "required": true,
+      "env_variable": "ADMIN_PASS"
+    },
+    {
+      "type": "text",
+      "label": "Admin First Name",
+      "required": true,
+      "env_variable": "ADMIN_FNAME"
+    },
+    {
+      "type": "text",
+      "label": "Admin Last Name",
+      "required": true,
+      "env_variable": "ADMIN_LNAME"
+    },
+    {
+      "type": "text",
+      "label": "RabbitMQ Host",
+      "required": true,
+      "env_variable": "RABBITMQ_HOST"
+    },
+    {
+      "type": "text",
+      "label": "RabbitMQ User",
+      "required": true,
+      "env_variable": "RABBITMQ_USER"
+    },
+    {
+      "type": "text",
+      "label": "RabbitMQ Password",
+      "required": true,
+      "env_variable": "RABBITMQ_PASS"
+    },
+    {
+      "type": "text",
+      "label": "RabbitMQ Virtual Host",
+      "required": true,
+      "env_variable": "RABBITMQ_VHOST"
+    },
+    {
+      "type": "text",
+      "label": "Enable SpamAssassin",
+      "required": true,
+      "env_variable": "ENABLE_SPAMASSASSIN"
+    },
+    {
+      "type": "text",
+      "label": "SpamAssassin Host",
+      "required": true,
+      "env_variable": "SPAMASSASSIN_HOST"
+    },
+    {
+      "type": "text",
+      "label": "Enable Rspamd",
+      "required": true,
+      "env_variable": "ENABLE_RSPAMD"
+    },
+    {
+      "type": "text",
+      "label": "Rspamd Host",
+      "required": true,
+      "env_variable": "RSPAMD_HOST"
+    },
+    {
+      "type": "text",
+      "label": "Enable ClamAV",
+      "required": true,
+      "env_variable": "ENABLE_CLAMAV"
+    },
+    {
+      "type": "text",
+      "label": "ClamAV Host",
+      "required": true,
+      "env_variable": "CLAMAV_HOST"
+    },
+    {
+      "type": "text",
+      "label": "DNS Hostname",
+      "required": true,
+      "env_variable": "DNS_HOSTNAME"
+    },
+    {
+      "type": "text",
+      "label": "DNS MX",
+      "required": true,
+      "env_variable": "DNS_MX"
+    },
+    {
+      "type": "text",
+      "label": "DNS Return Path",
+      "required": true,
+      "env_variable": "DNS_RETURN_PATH"
+    },
+    {
+      "type": "text",
+      "label": "DNS Route Domain",
+      "required": true,
+      "env_variable": "DNS_ROUTE_DOMAIN"
+    },
+    {
+      "type": "text",
+      "label": "DNS Track Domain",
+      "required": true,
+      "env_variable": "DNS_TRACK_DOMAIN"
+    },
+    {
+      "type": "text",
+      "label": "DNS SPF",
+      "required": true,
+      "env_variable": "DNS_SPF"
+    },
+    {
+      "type": "text",
+      "label": "DNS DKIM Identifier",
+      "required": true,
+      "env_variable": "DNS_DKIM_IDENTIFIER"
+    },
+    {
+      "type": "text",
+      "label": "DNS Domain Verify Prefix",
+      "required": true,
+      "env_variable": "DNS_DOMAIN_VERIFY_PREFIX"
+    },
+    {
+      "type": "text",
+      "label": "SMTP Server Enable TLS",
+      "required": true,
+      "env_variable": "SMTP_SERVER_ENABLE_TLS"
+    },
+    {
+      "type": "text",
+      "label": "SMTP From Address",
+      "required": true,
+      "env_variable": "SMTP_FROM_ADDRESS"
+    },
+    {
+      "type": "text",
+      "label": "SMTP From Name",
+      "required": true,
+      "env_variable": "SMTP_FROM_NAME"
+    },
+    {
+      "type": "text",
+      "label": "SMTP Host",
+      "required": true,
+      "env_variable": "SMTP_HOST"
+    },
+    {
+      "type": "text",
+      "label": "SMTP User",
+      "required": true,
+      "env_variable": "SMTP_USER"
+    },
+    {
+      "type": "text",
+      "label": "SMTP Password",
+      "required": true,
+      "env_variable": "SMTP_PASS"
+    },
+    {
+      "type": "text",
+      "label": "Web Host",
+      "required": true,
+      "env_variable": "WEB_HOST"
+    },
+    {
+      "type": "text",
+      "label": "Web Protocol",
+      "required": true,
+      "env_variable": "WEB_PROTOCOL"
+    },
+    {
+      "type": "text",
+      "label": "Database Dump Frequency",
+      "required": false,
+      "env_variable": "DB_DUMP_FREQ"
+    },
+    {
+      "type": "text",
+      "label": "Database Dump Begin",
+      "required": false,
+      "env_variable": "DB_DUMP_BEGIN"
+    },
+    {
+      "type": "text",
+      "label": "Database Cleanup Time",
+      "required": false,
+      "env_variable": "DB_CLEANUP_TIME"
+    },
+    {
+      "type": "text",
+      "label": "Compression",
+      "required": false,
+      "env_variable": "COMPRESSION"
+    },
+    {
+      "type": "text",
+      "label": "MD5",
+      "required": false,
+      "env_variable": "MD5"
+    },
+    {
+      "type": "text",
+      "label": "RabbitMQ Default User",
+      "required": false,
+      "env_variable": "RABBITMQ_DEFAULT_USER"
+    },
+    {
+      "type": "text",
+      "label": "RabbitMQ Default Password",
+      "required": false,
+      "env_variable": "RABBITMQ_DEFAULT_PASS"
+    },
+    {
+      "type": "text",
+      "label": "RabbitMQ Default Virtual Host",
+      "required": false,
+      "env_variable": "RABBITMQ_DEFAULT_VHOST"
     }
   ]
 }
