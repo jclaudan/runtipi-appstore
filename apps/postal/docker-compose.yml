@@ -1,24 +1,11 @@
-version: "3.8"
+version: '3.7'
 services:
-  postal:
-    image: catdeployed/postal:alpine
-    depends_on:
-      - mariadb
-      - rabbitmq
-    entrypoint: ["/docker-entrypoint.sh"]
-    volumes:
-      - type: bind
-        source: ./docker/ci-config
-        target: /config
+
+  postal-app:
+    image: tiredofit/postal:latest
+    container_name: postal-app
     ports:
-      - ${APP_PORT}:80
-    environment:
-      POSTAL_CONFIG_ROOT: /config
-      KATAPULT_CONFIG_FILE: /ci-config.yml
-      WAIT_FOR_TIMEOUT: 90
-      WAIT_FOR_TARGETS: |-
-        mariadb:3306
-        rabbitmq:5672
+      - 25:2525
     labels:
       traefik.enable: true
       traefik.http.middlewares.postal-web-redirect.redirectscheme.scheme: https
@@ -39,21 +26,124 @@ services:
       traefik.http.routers.postal-local.entrypoints: websecure
       traefik.http.routers.postal-local.service: postal
       traefik.http.routers.postal-local.tls: true
-    networks:
-      - tipi_main_network
-
-  mariadb:
-    image: mariadb
-    restart: always
+    volumes:
+      - ./logs/postal:/logs
     environment:
-      MARIADB_DATABASE: ${MARIADB_DATABASE}
-      MARIADB_ALLOW_EMPTY_PASSWORD: ${MARIADB_ALLOW_EMPTY_PASSWORD}
-      MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: ${MARIADB_ALLOW_EMPTY_ROOT_PASSWORD}
+      - CONTAINER_NAME=postal-app
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASS=${DB_PASS}
+      - DB_ROOT_PASS=${DB_ROOT_PASS}
+      - ADMIN_EMAIL=${ADMIN_EMAIL}
+      - ADMIN_PASS=${ADMIN_PASS}
+      - ADMIN_FNAME=${ADMIN_FNAME}
+      - ADMIN_LNAME=${ADMIN_LNAME}
+      - RABBITMQ_HOST=${RABBITMQ_HOST}
+      - RABBITMQ_USER=${RABBITMQ_USER}
+      - RABBITMQ_PASS=${RABBITMQ_PASS}
+      - RABBITMQ_VHOST=${RABBITMQ_VHOST}
+      - ENABLE_SPAMASSASSIN=${ENABLE_SPAMASSASSIN}
+      - SPAMASSASSIN_HOST=${SPAMASSASSIN_HOST}
+      - ENABLE_RSPAMD=${ENABLE_RSPAMD}
+      - RSPAMD_HOST=${RSPAMD_HOST}
+      - ENABLE_CLAMAV=${ENABLE_CLAMAV}
+      - CLAMAV_HOST=${CLAMAV_HOST}
+      - DNS_HOSTNAME=${DNS_HOSTNAME}
+      - DNS_MX=${DNS_MX}
+      - DNS_RETURN_PATH=${DNS_RETURN_PATH}
+      - DNS_ROUTE_DOMAIN=${DNS_ROUTE_DOMAIN}
+      - DNS_TRACK_DOMAIN=${DNS_TRACK_DOMAIN}
+      - DNS_SPF=${DNS_SPF}
+      - DNS_DKIM_IDENTIFIER=${DNS_DKIM_IDENTIFIER}
+      - DNS_DOMAIN_VERIFY_PREFIX=${DNS_DOMAIN_VERIFY_PREFIX}
+      - SMTP_SERVER_ENABLE_TLS=${SMTP_SERVER_ENABLE_TLS}
+      - SMTP_FROM_ADDRESS=${SMTP_FROM_ADDRESS}
+      - SMTP_FROM_NAME=${SMTP_FROM_NAME}
+      - SMTP_HOST=${SMTP_HOST}
+      - SMTP_USER=${SMTP_USER}
+      - SMTP_PASS=${SMTP_PASS}
+      - WEB_HOST=${WEB_HOST}
+      - WEB_PROTOCOL=${WEB_PROTOCOL}
     networks:
       - tipi_main_network
-
-  rabbitmq:
-    image: rabbitmq:3
     restart: always
+
+  postal-db:
+    image: tiredofit/mariadb:latest
+    container_name: postal-db
+    volumes:
+      - ./db:/var/lib/mysql
+    environment:
+      - ROOT_PASS=${ROOT_PASS}
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASS=${DB_PASS}
+      - CONTAINER_NAME=postal-db
     networks:
       - tipi_main_network
+    restart: always
+
+  postal-db-backup:
+    image: tiredofit/db-backup:latest
+    container_name: postal-db-backup
+    links:
+      - postal-db
+    volumes:
+      - ./dbbackup:/backup
+    environment:
+      - CONTAINER_NAME=postal-db-backup
+      - DB_HOST=${DB_HOST}
+      - DB_TYPE=mariadb
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASS=${DB_PASS}
+      - DB_DUMP_FREQ=${DB_DUMP_FREQ}
+      - DB_DUMP_BEGIN=${DB_DUMP_BEGIN}
+      - DB_CLEANUP_TIME=${DB_CLEANUP_TIME}
+      - COMPRESSION=${COMPRESSION}
+      - MD5=${MD5}
+    networks:
+      - tipi_main_network
+    restart: always
+
+  postal-rabbitmq:
+    container_name: postal-rabbitmq
+    image: tiredofit/rabbitmq
+    environment:
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS}
+      - RABBITMQ_DEFAULT_VHOST=${RABBITMQ_DEFAULT_VHOST}
+      - CONTAINER_NAME=postal-rabbitmq
+    networks:
+      - tipi_main_network
+    restart: always
+
+  postal-clamav:
+    container_name: postal-clamav
+    image: tiredofit/clamav
+    volumes:
+      - ./data/clamav:/data
+      - ./logs/clamav:/var/log/clamav
+    environment:
+      - CONTAINER_NAME=postal-clamav
+    networks:
+      - tipi_main_network
+    restart: always
+
+  postal-spamassassin:
+    image: tiredofit/spamassassin
+    container_name: postal-spamassassin-app
+    volumes:
+      - ./logs/spamassassin:/var/log/spamassassin
+      - ./data/spamassassin/conf:/etc/mail/spamassassin
+      - ./data/spamassassin/data:/var/lib/spamassassin
+    environment:
+      - CONTAINER_NAME=postal-spamassassin
+    networks:
+      - tipi_main_network
+    restart: always
+
+networks:
+  - tipi_main_network
