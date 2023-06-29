@@ -1,9 +1,9 @@
 version: '3.7'
 services:
 
-  postal-app:
+  postal:
     image: tiredofit/postal:latest
-    container_name: postal-app
+    container_name: postal
     ports:
       - 25:2525
       - 8085:80
@@ -30,7 +30,7 @@ services:
     volumes:
       - ./logs/postal:/logs
     environment:
-      - CONTAINER_NAME=postal-app
+      - CONTAINER_NAME=postal
       - DB_HOST=${DB_HOST}
       - DB_PORT=${DB_PORT}
       - DB_NAME=${DB_NAME}
