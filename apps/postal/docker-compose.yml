@@ -6,6 +6,7 @@ services:
     container_name: postal-app
     ports:
       - 25:2525
+      - 8085:80
     labels:
       traefik.enable: true
       traefik.http.middlewares.postal-web-redirect.redirectscheme.scheme: https
