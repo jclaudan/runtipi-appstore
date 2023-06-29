@@ -4,7 +4,7 @@
   "port": 8085,
   "available": true,
   "exposable": true,
-  "id": "postal-app",
+  "id": "postal",
   "tipi_version": 1,
   "version": "latest",
   "categories": ["data"],
